@@ -55,10 +55,11 @@ export default function Tasks() {
   };
 
   const toggleTask = async (taskId: number, currentStatus: boolean) => {
+    setTasks(prev => prev.map(t => t.id === taskId ? { ...t, completed: !currentStatus } : t));
     try {
-      const response = await apiClient.patch<Task>(`/tasks/${taskId}?completed=${!currentStatus}`);
-      setTasks(tasks.map((task) => (task.id === taskId ? response.data : task)));
+      await apiClient.patch<Task>(`/tasks/${taskId}?completed=${!currentStatus}`);
     } catch (error) {
+      setTasks(prev => prev.map(t => t.id === taskId ? { ...t, completed: currentStatus } : t));
       console.error('Error toggling task:', error);
     }
   };
@@ -83,12 +84,12 @@ export default function Tasks() {
   };
 
   const goToPreviousWeek = () => {
-    const prevWeek = format(addDays(new Date(weekStart), -7), 'yyyy-MM-dd');
+    const prevWeek = format(addDays(new Date(weekStart + 'T00:00:00'), -7), 'yyyy-MM-dd');
     setWeekStart(prevWeek);
   };
 
   const goToNextWeek = () => {
-    const nextWeek = format(addDays(new Date(weekStart), 7), 'yyyy-MM-dd');
+    const nextWeek = format(addDays(new Date(weekStart + 'T00:00:00'), 7), 'yyyy-MM-dd');
     setWeekStart(nextWeek);
   };
 
@@ -127,7 +128,7 @@ export default function Tasks() {
       </div>
 
       <div className="text-sm text-gray-600 mb-4">
-        Week of {format(new Date(weekStart), 'MMM dd, yyyy')}
+        Week of {format(new Date(weekStart + 'T00:00:00'), 'MMM dd, yyyy')}
       </div>
 
       <div className="overflow-x-auto">

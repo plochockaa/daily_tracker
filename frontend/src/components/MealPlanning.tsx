@@ -54,18 +54,12 @@ export default function MealPlanning() {
   };
 
   const goToPreviousWeek = () => {
-    const prevWeek = format(
-      addDays(new Date(weekStart), -7),
-      'yyyy-MM-dd'
-    );
+    const prevWeek = format(addDays(new Date(weekStart + 'T00:00:00'), -7), 'yyyy-MM-dd');
     setWeekStart(prevWeek);
   };
 
   const goToNextWeek = () => {
-    const nextWeek = format(
-      addDays(new Date(weekStart), 7),
-      'yyyy-MM-dd'
-    );
+    const nextWeek = format(addDays(new Date(weekStart + 'T00:00:00'), 7), 'yyyy-MM-dd');
     setWeekStart(nextWeek);
   };
 
@@ -104,7 +98,7 @@ export default function MealPlanning() {
       </div>
 
       <div className="text-sm text-gray-600 mb-4">
-        Week of {format(new Date(weekStart), 'MMM dd, yyyy')}
+        Week of {format(new Date(weekStart + 'T00:00:00'), 'MMM dd, yyyy')}
       </div>
 
       <div className="overflow-x-auto">
