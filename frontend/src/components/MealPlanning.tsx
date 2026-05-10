@@ -114,12 +114,15 @@ export default function MealPlanning() {
               <th className="border border-gray-300 bg-gray-100 px-4 py-2 text-left font-semibold">
                 Meal
               </th>
-              {DAYS_OF_WEEK.map((day) => (
+              {DAYS_OF_WEEK.map((day, index) => (
                 <th
                   key={day}
                   className="border border-gray-300 bg-gray-100 px-4 py-2 text-left font-semibold capitalize"
                 >
-                  {day}
+                  <div>{day}</div>
+                  <div className="text-xs font-normal text-gray-500">
+                    {format(addDays(new Date(weekStart + 'T00:00:00'), index), 'MMM d')}
+                  </div>
                 </th>
               ))}
             </tr>

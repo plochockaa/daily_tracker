@@ -9,7 +9,7 @@ export type DayOfWeek =
   | 'saturday' 
   | 'sunday';
 
-export type MealTime = 'breakfast' | 'lunch' | 'dinner';
+export type MealTime = 'breakfast' | 'lunch' | 'snack' | 'dinner';
 
 export interface Meal {
   id: number;
@@ -82,6 +82,6 @@ export const DAYS_OF_WEEK: DayOfWeek[] = [
   'sunday',
 ];
 
-export const MEAL_TIMES: MealTime[] = ['breakfast', 'lunch', 'dinner'];
+export const MEAL_TIMES: MealTime[] = ['breakfast', 'lunch', 'snack', 'dinner'];
 
-export const DEFAULT_TASKS = ['shower', 'shampoo', 'workout'];
+export const DEFAULT_TASKS = ['shower', 'shampoo', 'workout', 'tango'];

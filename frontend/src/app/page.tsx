@@ -16,10 +16,10 @@ export default function Home() {
         {/* Header */}
         <header className="mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Productivity Tracker
+            Daily Tracker
           </h1>
-          <p className="text-gray-600">
-            Plan your meals, track your tasks, and manage your finances
+          <p className="text-gray-600 italic">
+            For my love, A
           </p>
         </header>
 
