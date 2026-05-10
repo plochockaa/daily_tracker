@@ -7,64 +7,52 @@ import Finances from '@/components/Finances';
 
 type Tab = 'meals' | 'tasks' | 'finances';
 
+const TABS: { key: Tab; label: string; icon: string }[] = [
+  { key: 'meals', label: 'Meal Planning', icon: '🍽️' },
+  { key: 'tasks', label: 'Tasks', icon: '✓' },
+  { key: 'finances', label: 'Finances', icon: '💰' },
+];
+
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('meals');
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+    <main className="min-h-screen bg-[#0d0d1a] text-white">
+      <div className="container mx-auto px-4 py-10 max-w-7xl">
+
+        <header className="mb-10 text-center">
+          <h1 className="text-5xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+            <span className="text-pink-500">♥</span>
             Daily Tracker
           </h1>
-          <p className="text-gray-600 italic">
-            For my love, A
-          </p>
+          <p className="text-gray-400 italic text-lg">For my love, A</p>
         </header>
 
-        {/* Tab Navigation */}
-        <div className="bg-white rounded-lg shadow-md mb-6">
-          <nav className="flex border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab('meals')}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
-                activeTab === 'meals'
-                  ? 'border-b-2 border-primary-500 text-primary-600'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              🍽️ Meal Planning
-            </button>
-            <button
-              onClick={() => setActiveTab('tasks')}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
-                activeTab === 'tasks'
-                  ? 'border-b-2 border-primary-500 text-primary-600'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              ✓ Tasks
-            </button>
-            <button
-              onClick={() => setActiveTab('finances')}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-colors ${
-                activeTab === 'finances'
-                  ? 'border-b-2 border-primary-500 text-primary-600'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              💰 Finances
-            </button>
+        <div className="bg-[#1a1a2e] rounded-2xl mb-6 p-1.5">
+          <nav className="flex gap-1">
+            {TABS.map(({ key, label, icon }) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`flex-1 flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${
+                  activeTab === key
+                    ? 'bg-violet-600 text-white shadow-lg shadow-violet-900/40'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <span>{icon}</span>
+                {label}
+              </button>
+            ))}
           </nav>
         </div>
 
-        {/* Tab Content — keep all mounted so state isn't lost on tab switch */}
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-[#1a1a2e] rounded-2xl p-6">
           <div className={activeTab !== 'meals' ? 'hidden' : ''}><MealPlanning /></div>
           <div className={activeTab !== 'tasks' ? 'hidden' : ''}><Tasks /></div>
           <div className={activeTab !== 'finances' ? 'hidden' : ''}><Finances /></div>
         </div>
+
       </div>
     </main>
   );
