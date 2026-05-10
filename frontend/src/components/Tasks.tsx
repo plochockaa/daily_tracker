@@ -13,6 +13,7 @@ export default function Tasks() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setTasks([]);
     loadTasks();
   }, [weekStart]);
 

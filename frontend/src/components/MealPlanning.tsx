@@ -13,6 +13,7 @@ export default function MealPlanning() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setMeals({});
     loadMeals();
   }, [weekStart]);
 
