@@ -67,6 +67,17 @@ export default function Tasks() {
   };
 
   const createAndToggleTask = async (day: DayOfWeek, taskName: string) => {
+    const tempId = Date.now();
+    const optimistic: Task = {
+      id: tempId,
+      name: taskName,
+      day_of_week: day,
+      week_start_date: weekStart,
+      completed: true,
+      created_at: '',
+      updated_at: '',
+    };
+    setTasks(prev => [...prev, optimistic]);
     try {
       const taskData: TaskCreate = {
         name: taskName,
@@ -75,8 +86,9 @@ export default function Tasks() {
         completed: true,
       };
       const response = await apiClient.post<Task>('/tasks', taskData);
-      setTasks(prev => [...prev, response.data]);
+      setTasks(prev => prev.map(t => t.id === tempId ? response.data : t));
     } catch (error) {
+      setTasks(prev => prev.filter(t => t.id !== tempId));
       console.error('Error creating task:', error);
     }
   };
