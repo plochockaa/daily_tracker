@@ -10,10 +10,12 @@ export default function Tasks() {
   const [weekStart, setWeekStart] = useState(() =>
     format(startOfWeek(new Date(), { weekStartsOn: 1 }), 'yyyy-MM-dd')
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     setTasks([]);
+    setApiError(false);
     loadTasks();
   }, [weekStart]);
 
@@ -22,12 +24,11 @@ export default function Tasks() {
       setLoading(true);
       const response = await apiClient.get<Task[]>(`/tasks?week_start_date=${weekStart}`);
       setTasks(response.data);
-
-      // Initialize default tasks if none exist
       if (response.data.length === 0) {
         await initializeDefaultTasks();
       }
     } catch (error) {
+      setApiError(true);
       console.error('Error loading tasks:', error);
     } finally {
       setLoading(false);
@@ -74,7 +75,7 @@ export default function Tasks() {
         completed: true,
       };
       const response = await apiClient.post<Task>('/tasks', taskData);
-      setTasks([...tasks, response.data]);
+      setTasks(prev => [...prev, response.data]);
     } catch (error) {
       console.error('Error creating task:', error);
     }
@@ -85,22 +86,16 @@ export default function Tasks() {
   };
 
   const goToPreviousWeek = () => {
-    const prevWeek = format(addDays(new Date(weekStart + 'T00:00:00'), -7), 'yyyy-MM-dd');
-    setWeekStart(prevWeek);
+    setWeekStart(format(addDays(new Date(weekStart + 'T00:00:00'), -7), 'yyyy-MM-dd'));
   };
 
   const goToNextWeek = () => {
-    const nextWeek = format(addDays(new Date(weekStart + 'T00:00:00'), 7), 'yyyy-MM-dd');
-    setWeekStart(nextWeek);
+    setWeekStart(format(addDays(new Date(weekStart + 'T00:00:00'), 7), 'yyyy-MM-dd'));
   };
 
   const goToCurrentWeek = () => {
     setWeekStart(format(startOfWeek(new Date(), { weekStartsOn: 1 }), 'yyyy-MM-dd'));
   };
-
-  if (loading) {
-    return <div className="text-center py-8">Loading tasks...</div>;
-  }
 
   return (
     <div>
@@ -131,6 +126,16 @@ export default function Tasks() {
       <div className="text-sm text-gray-600 mb-4">
         Week of {format(new Date(weekStart + 'T00:00:00'), 'MMM dd, yyyy')}
       </div>
+
+      {apiError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md text-sm text-red-700">
+          Could not connect to the server. Check that your backend is deployed and <code>NEXT_PUBLIC_API_URL</code> is set correctly in Vercel.
+        </div>
+      )}
+
+      {loading && (
+        <div className="mb-2 text-sm text-gray-400">Syncing...</div>
+      )}
 
       <div className="overflow-x-auto">
         <table className="min-w-full border-collapse">
