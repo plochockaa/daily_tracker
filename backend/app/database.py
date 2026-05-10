@@ -1,34 +1,25 @@
 """
-Database setup with SQLite - auto-creates tables on startup.
+Database setup - SQLite for local dev, PostgreSQL in production.
+Set DATABASE_URL env var to switch.
 """
-from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, Date, DateTime, Enum as SQLEnum
+import os
+from sqlalchemy import create_engine, Column, Integer, String, Float, Boolean, Date, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
-import enum
 
-# SQLite database - creates database.db file automatically
-DATABASE_URL = "sqlite:///./database.db"
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./database.db")
+
+# Render and some platforms use postgres:// but SQLAlchemy requires postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# SQLite needs check_same_thread=False; PostgreSQL does not
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
-# Enums
-class DayOfWeek(str, enum.Enum):
-    MONDAY = "monday"
-    TUESDAY = "tuesday"
-    WEDNESDAY = "wednesday"
-    THURSDAY = "thursday"
-    FRIDAY = "friday"
-    SATURDAY = "saturday"
-    SUNDAY = "sunday"
-
-class MealTime(str, enum.Enum):
-    BREAKFAST = "breakfast"
-    LUNCH = "lunch"
-    DINNER = "dinner"
-
-# Models
 class Meal(Base):
     __tablename__ = "meals"
     id = Column(Integer, primary_key=True, index=True)
@@ -60,12 +51,10 @@ class Expense(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-# Auto-create tables
 def init_db():
     Base.metadata.create_all(bind=engine)
     print("✅ Database tables created/verified")
 
-# Dependency
 def get_db():
     db = SessionLocal()
     try:
