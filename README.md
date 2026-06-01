@@ -65,7 +65,7 @@ productivity-tracker/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/productivity-tracker.git
+   git clone https://github.com/plochockaa/productivity-tracker.git
    cd productivity-tracker
    ```
 
@@ -270,7 +270,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For issues and questions:
 - GitHub Issues: [Create an issue](https://github.com/yourusername/productivity-tracker/issues)
-- Email: support@productivity-tracker.com
+- Email: plochockaa@gmail.com
 
 ---
 
